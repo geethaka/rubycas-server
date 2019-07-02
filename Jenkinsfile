@@ -2,6 +2,9 @@ pipeline {
   agent any
   stages {
     stage('build docker image and tag') {
+       when {
+                changeRequest()
+            }
       steps {
         sh 'sudo docker build -t ssoweb .'
       }
