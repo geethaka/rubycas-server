@@ -52,11 +52,13 @@ sudo docker push $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/ssoweb:${VERSIO
                 branch 'testci'
             }
       steps {
+        script {
+                    env.current_tag = sh(returnStdout: true, script: "kubectl get deployment -n dev ssoweb -o jsonpath=\"{..image}\" | cut -d ':' -f 2")
+        }
         sh '''
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
 eval sudo $(aws ecr get-login --no-include-email --region us-west-2)
 latest_tag=$(aws ecr describe-images --repository-name ssoweb --region us-west-2  --output text --query \'sort_by(imageDetails,& imagePushedAt)[*].imageTags[*]\' | tr \'\\t\' \'\\n\'  | tail -1)
-export current_tag=$(kubectl get deployment -n dev ssoweb -o jsonpath="{..image}" | cut -d ':' -f 2)
 sleep 60
 fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --namespace=dev --update-image=$AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/ssoweb:${latest_tag}
 '''
