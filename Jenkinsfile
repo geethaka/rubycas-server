@@ -59,6 +59,9 @@ latest_tag=$(aws ecr describe-images --repository-name ssoweb --region us-west-2
 sleep 60
 fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --namespace=dev --update-image=$AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/ssoweb:${latest_tag}
 '''
+        script {
+                    env.DEPLOY_STG_STATUS = "true"
+        }
       }
     }
     stage('stg test execution ') {
@@ -78,6 +81,14 @@ fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --names
       }
     }
   }
+  post {
+        success {
+            echo '${BAR}'
+        }
+        failure {
+            echo '${BAR}'           
+        }
+    }
   triggers {
     pollSCM('* * * * *')
   }
