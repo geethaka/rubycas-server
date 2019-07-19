@@ -83,16 +83,10 @@ fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --names
   }
   post {
         success {
-            steps {
-                echo "sucess"
-                echo "env.BAR su '${BAR}'"
-            }
+          echo 'whole pipeline successful'
         }
         failure {
-            steps {
-                echo "fail"
-                echo "env.BAR fail '${BAR}'"
-            }           
+          echo 'whole pipeline fail'          
         }
     }
   triggers {
