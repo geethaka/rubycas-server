@@ -83,10 +83,10 @@ fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --names
   }
   post {
         success {
-            echo '${BAR}'
+            echo "env.BAR su '${BAR}'"
         }
         failure {
-            echo '${BAR}'           
+            echo "env.BAR is '${BAR}'"           
         }
     }
   triggers {
