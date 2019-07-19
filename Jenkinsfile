@@ -83,14 +83,12 @@ fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --names
   }
   post {
         success {
-          steps {
-            echo "sucess"
-          } 
+            sh 'env'
+            echo "FOO is '${DEPLOY_STG_STATUS}'"
         }
         failure {
-          steps {
-            echo "fail"
-          }          
+            sh 'env'
+            echo "FOO is '${DEPLOY_STG_STATUS}'"        
         }
     }
   triggers {
