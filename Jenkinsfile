@@ -93,7 +93,11 @@ fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --names
         failure {
             sh 'env'
             echo "FOO is '${DEPLOY_STG_STATUS}'" 
-            echo "FOO is '${current_tag}'"       
+            echo "FOO is '${current_tag}'"
+            sh  '''
+            fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --namespace=dev --update-image=$AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/ssoweb:${current_tag}
+            '''
+
         }
     }
   triggers {
