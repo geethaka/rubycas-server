@@ -95,6 +95,7 @@ fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --names
             echo "FOO is '${DEPLOY_STG_STATUS}'" 
             echo "FOO is '${current_tag}'"
             sh  '''
+            export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
             fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --namespace=dev --update-image=$AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/ssoweb:${current_tag}
             '''
 
