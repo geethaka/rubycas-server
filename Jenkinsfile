@@ -56,11 +56,12 @@ sudo docker push $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/ssoweb:${VERSIO
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
 eval sudo $(aws ecr get-login --no-include-email --region us-west-2)
 latest_tag=$(aws ecr describe-images --repository-name ssoweb --region us-west-2  --output text --query \'sort_by(imageDetails,& imagePushedAt)[*].imageTags[*]\' | tr \'\\t\' \'\\n\'  | tail -1)
+export current_tag=$(kubectl get deployment -n dev ssoweb -o jsonpath="{..image}" | cut -d ':' -f 2)
 sleep 60
 fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --namespace=dev --update-image=$AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/ssoweb:${latest_tag}
 '''
         script {
-                    env.DEPLOY_STG_STATUS = "true"
+                    env.DEPLOY_STG_STATUS = "1"
         }
       }
     }
@@ -85,10 +86,12 @@ fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --names
         success {
             sh 'env'
             echo "FOO is '${DEPLOY_STG_STATUS}'"
+            echo "FOO is '${current_tag}'"
         }
         failure {
             sh 'env'
-            echo "FOO is '${DEPLOY_STG_STATUS}'"        
+            echo "FOO is '${DEPLOY_STG_STATUS}'" 
+            echo "FOO is '${current_tag}'"       
         }
     }
   triggers {
