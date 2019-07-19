@@ -53,7 +53,7 @@ sudo docker push $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/ssoweb:${VERSIO
             }
       steps {
         script {
-                    env.current_tag = sh(returnStdout: true, script: "kubectl get deployment -n dev ssoweb -o jsonpath=\"{..image}\" | cut -d ':' -f 2")
+                    env.current_tag = sh(returnStdout: true, script: "export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin && kubectl get deployment -n dev ssoweb -o jsonpath=\"{..image}\" | cut -d ':' -f 2")
         }
         sh '''
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
