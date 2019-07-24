@@ -37,7 +37,7 @@ pipeline {
     }
     stage('ecr push') {
       when {
-                branch 'testci'
+                branch 'master'
             }
       steps {
         sh '''eval sudo $(aws ecr get-login --no-include-email --region us-west-2)
@@ -49,7 +49,7 @@ sudo docker push $AWS_ACCOUNT_ID.dkr.ecr.us-west-2.amazonaws.com/ssoweb:${VERSIO
     }
     stage('deploy to stg') {
       when {
-                branch 'testci'
+                branch 'master'
             }
       steps {
         script {
@@ -69,7 +69,7 @@ fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --names
     }
     stage('stg test execution ') {
       when {
-                branch 'testci'
+                branch 'master'
             }
       steps {
         sh './int_test.sh'
@@ -77,7 +77,7 @@ fluxctl release --k8s-fwd-ns=flux --workload=dev:helmrelease/rubycas-dev --names
     }
     stage('deploy to prod') {
       when {
-                branch 'testci'
+                branch 'master'
             }
       steps {
         sh 'echo "this will deploy to next env"'
